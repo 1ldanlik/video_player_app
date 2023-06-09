@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:video_player_app/components/draggable_player.dart';
 
 class DragPage extends StatefulWidget {
   const DragPage({Key? key}) : super(key: key);
@@ -9,7 +10,8 @@ class DragPage extends StatefulWidget {
 }
 
 class _DragPageState extends State<DragPage> {
-  double width = 70.0, height = 70.0;
+  double width = 70.0,
+      height = 70.0;
   double _x = 0;
   double _y = 0;
 
@@ -20,8 +22,7 @@ class _DragPageState extends State<DragPage> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset(
-        'assets/video.mp4')
+    _controller = VideoPlayerController.asset('assets/video.mp4')
       ..initialize().then((_) {
         setState(() {});
       });
@@ -32,53 +33,6 @@ class _DragPageState extends State<DragPage> {
     _controller.dispose();
 
     super.dispose();
-  }
-
-  Widget circle() {
-    return Container(
-      width: width,
-      height: height,
-      child: Center(
-        child: Text(
-          "Drag",
-        ),
-      ),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.blue,
-      ),
-    );
-  }
-
-  Widget draggable() {
-    return Positioned(
-      left: _x,
-      top: _y,
-      child:  Draggable(
-        feedback: Container(
-            width: 150,
-            child: AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller))),
-        childWhenDragging: Container(),
-        onDragEnd: (dragDetails) {
-          setState(
-                () {
-              _x = dragDetails.offset.dx;
-              // We need to remove offsets like app/status bar from Y
-              _y = dragDetails.offset.dy -
-                  appBar!.preferredSize.height -
-                  MediaQuery.of(context).padding.top;
-            },
-          );
-        },
-        child: SizedBox(
-          width: 150,
-            child: AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller))),
-      ),
-    );
   }
 
   @override
@@ -104,7 +58,24 @@ class _DragPageState extends State<DragPage> {
       appBar: appBar,
       body: Stack(
         children: <Widget>[
-          draggable(),
+          Positioned(
+              left: _x,
+              top: _y,
+              child: DraggablePLayer(
+                controller: _controller,
+                onDragEnd: (dragDetails) {
+                  setState(() {
+                    _x = dragDetails.offset.dx;
+                    // We need to remove offsets like app/status bar from Y
+                    _y = dragDetails.offset.dy -
+                        appBar!.preferredSize.height -
+                        MediaQuery
+                            .of(context)
+                            .padding
+                            .top;
+                  });
+                },
+              ))
         ],
       ),
     );
