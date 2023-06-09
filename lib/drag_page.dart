@@ -55,14 +55,8 @@ class _DragPageState extends State<DragPage> {
       left: _x,
       top: _y,
       child:  Draggable(
-        child: Container(
-          width: 100,
-            child: AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller))),
         feedback: Container(
-            width: 100,
-            height: 100,
+            width: 150,
             child: AspectRatio(
                 aspectRatio: _controller.value.aspectRatio,
                 child: VideoPlayer(_controller))),
@@ -78,6 +72,11 @@ class _DragPageState extends State<DragPage> {
             },
           );
         },
+        child: SizedBox(
+          width: 150,
+            child: AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: VideoPlayer(_controller))),
       ),
     );
   }
